@@ -1,0 +1,95 @@
+<Window x:Class="MarkLite.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="MarkLite - Markdown Editor" Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0" Background="#F5F5F5">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Command="{Binding NewCommand}" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="_Open..." Command="{Binding OpenCommand}" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="_Save" Command="{Binding SaveCommand}" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Save _As..." Command="{Binding SaveAsCommand}" InputGestureText="Ctrl+Shift+S"/>
+                <Separator/>
+                <MenuItem Header="E_xit" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Undo" Command="ApplicationCommands.Undo" InputGestureText="Ctrl+Z"/>
+                <MenuItem Header="_Redo" Command="ApplicationCommands.Redo" InputGestureText="Ctrl+Y"/>
+                <Separator/>
+                <MenuItem Header="Cu_t" Command="ApplicationCommands.Cut" InputGestureText="Ctrl+X"/>
+                <MenuItem Header="_Copy" Command="ApplicationCommands.Copy" InputGestureText="Ctrl+C"/>
+                <MenuItem Header="_Paste" Command="ApplicationCommands.Paste" InputGestureText="Ctrl+V"/>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="Toggle _Dark Mode" Command="{Binding ToggleThemeCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Command="{Binding AboutCommand}"/>
+            </MenuItem>
+        </Menu>
+        
+        <!-- Toolbar -->
+        <ToolBar Grid.Row="1" Background="#FAFAFA">
+            <Button Content="New" Command="{Binding NewCommand}" Padding="8,4" Margin="2"/>
+            <Button Content="Open" Command="{Binding OpenCommand}" Padding="8,4" Margin="2"/>
+            <Button Content="Save" Command="{Binding SaveCommand}" Padding="8,4" Margin="2"/>
+            <Separator/>
+            <Button Content="Undo" Command="ApplicationCommands.Undo" Padding="8,4" Margin="2"/>
+            <Button Content="Redo" Command="ApplicationCommands.Redo" Padding="8,4" Margin="2"/>
+            <Separator/>
+            <ToggleButton Content="Dark" IsChecked="{Binding IsDarkMode}" Padding="8,4" Margin="2"/>
+        </ToolBar>
+        
+        <!-- Editor Area -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Markdown Input -->
+            <TextBox Grid.Column="0"
+                     Text="{Binding MarkdownText, UpdateSourceTrigger=PropertyChanged}"
+                     AcceptsReturn="True"
+                     AcceptsTab="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     FontFamily="Consolas"
+                     FontSize="14"
+                     Padding="10"
+                     BorderThickness="0,0,1,0"
+                     BorderBrush="#DDDDDD"/>
+            
+            <!-- HTML Preview -->
+            <wv2:WebView2 Grid.Column="1"
+                          x:Name="PreviewWebView"
+                          DefaultBackgroundColor="White"/>
+        </Grid>
+        
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="3" Background="#F0F0F0">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusText}"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="{Binding WordCount, StringFormat='Words: {0}'}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+    
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewCommand}"/>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding OpenCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveCommand}"/>
+    </Window.InputBindings>
+</Window>
